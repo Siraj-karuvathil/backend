@@ -5,7 +5,7 @@ const makeCallback = require("../../utils/callback");
 router.get(
     "/",(req,res)=>{
         res.json({
-            msg:"hello Backends"
+            msg:"hello Backend"
         })
     }
     

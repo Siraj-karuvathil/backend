@@ -15,7 +15,7 @@ router.get("/success", async (req, res) => {
   if(req?.query?.status=="Paid"){
     addOrder(productId, userId).then((order) => {
       res.redirect(
-        "http://localhost:3000/payment-success" +
+        "https://cookingacademy.qa/payment-success" +
           `?orderId=${order.orderId}`
       );
     });

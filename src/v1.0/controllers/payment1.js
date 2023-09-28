@@ -21,11 +21,11 @@ const createPayment = async (req) => {
   );
   const paymentGatewayDetails = {
     sandboxURL: "https://skipcashtest.azurewebsites.net",
-    productionURL: "https://api.skipcash.app",
+    productionURL: process.env.SKIPCASH_URL,
     secretKey:
-      "ClB55tJ+ESI4cZG0jthc+2Vg1suT7pU/xkefwDjQ5zbDRSoMpBKnWRAZg1BKEI9EwIK0mKxD5mV+8wOST6lA+6Vbr/WGGvTGaQuQu0RyxSDrvjqjztgBzwPEJafSS2/tpC/w7Y0QNvU/y/YAY+hAHYMRYVEk800xczccXKL/p1oKgYOg+jEpLm4Er59bFjBnP42r7vlAJl7EiJDc8mk9npzo1uyTSbuRvZ6zg3ifRKhNl8VAkd9coLnNDAQ0CuVur1DpSa9JIHX9oyqDb9Krkyh2wGeGbD+gc76g/m0ieLeq558p92JFWjhmnZobh7s6xeNOO7inizlURrlLhVLzqgYLfWxFGABIFwl5j5OWXTG/Rpp75OFUkGR3WhaaNts9xtblmFLnzSVOyZTh1QM2h3rIFMmHJT/31e/QkJLmmeRDalvKkm8gxwMegzXc5XdE+AeUmeeDCkVyoWsCN3K3PxuO5+ZSVAbCH6Xq6nAIdfxg/DQToeyf/V7ga48kSkuM5smZotjQ40jOGSZVvugWBw==",
-    keyId: "28bdc589-9659-4682-90f6-b69c5186cee2",
-    clientId: "a7ba48e8-ea82-49c3-bef6-691dd9fd88c5",
+      process.env.SKIPCASH_SECRETE,
+    keyId: process.env.SKIPCASH_KEY_ID,
+    clientId: process.env.SKIPCASH_CLIENT_ID,
   };
 
   // if any parameters are removed, it should be removed from combinedData as well.

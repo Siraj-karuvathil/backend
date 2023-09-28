@@ -5,9 +5,6 @@ const CryptoJS = require("crypto-js");
 const { default: axios } = require("axios");
 
 const createPayment = async (req) => {
-  // console.log(req?.user);
-  // console.log(req?.body);
-  // console.log(req?.headers);
   const userId = req?.user?._id;
   const cart = await getCartByUserId(userId);
   if (cart === null) {
@@ -26,9 +23,9 @@ const createPayment = async (req) => {
     sandboxURL: "https://skipcashtest.azurewebsites.net",
     productionURL: "https://api.skipcash.app",
     secretKey:
-      "PMyNze/nE9ueQXN1tedX/uck3Pf55uu7F3TJoNQ6tHLGcc216KFuoEpG2/6gzU5NOpM+qWlW4AjsKSndCoJHzUBkE9YMSEnqZbhr3A9wcIvgP4SMTfvTKhB9hHBROuOa5POlwgVMNXr5QbvHFFYt3Gh7sIFs3mcFr0RYh3TurtcdSfSBVpAAydtA7+0Vj36ljf1/DOKnUsKUbxLmkRSVaV4jQe4BpU5RQ2PbqJD4gq/QIUsLu5g9bnHnBoKapo9i9vS9kBKWwaYEultBPTgh8pTjzyAFZsdJaG1LF2p751LxmilpbsHiEDE7G02H3zwg3qorGPGqT0dhWcH96yn3Ch6oOJYcbm4DkRlEbvUB+auV3DPxE6aXSt9xPDcJKhPCePhUkfZS4cfadUKrzW2uAq2Jw/a6mfvchXJOdbAYMc/2r86lhx0wrgqR+9oBqh/Rg/BP+cLM8fRxT9W2DyWAdkchUMimtP1Tm+UvjaTPlEQKq3P88EpwC6rzLhukihkxce9AaQhjVUT56wA78ybPcQ==",
-    keyId: "a7482a05-9475-4f52-a923-e5184db7a250",
-    clientId: "7d574805-bbd1-4f52-8526-0838625708d0",
+      "ClB55tJ+ESI4cZG0jthc+2Vg1suT7pU/xkefwDjQ5zbDRSoMpBKnWRAZg1BKEI9EwIK0mKxD5mV+8wOST6lA+6Vbr/WGGvTGaQuQu0RyxSDrvjqjztgBzwPEJafSS2/tpC/w7Y0QNvU/y/YAY+hAHYMRYVEk800xczccXKL/p1oKgYOg+jEpLm4Er59bFjBnP42r7vlAJl7EiJDc8mk9npzo1uyTSbuRvZ6zg3ifRKhNl8VAkd9coLnNDAQ0CuVur1DpSa9JIHX9oyqDb9Krkyh2wGeGbD+gc76g/m0ieLeq558p92JFWjhmnZobh7s6xeNOO7inizlURrlLhVLzqgYLfWxFGABIFwl5j5OWXTG/Rpp75OFUkGR3WhaaNts9xtblmFLnzSVOyZTh1QM2h3rIFMmHJT/31e/QkJLmmeRDalvKkm8gxwMegzXc5XdE+AeUmeeDCkVyoWsCN3K3PxuO5+ZSVAbCH6Xq6nAIdfxg/DQToeyf/V7ga48kSkuM5smZotjQ40jOGSZVvugWBw==",
+    keyId: "28bdc589-9659-4682-90f6-b69c5186cee2",
+    clientId: "a7ba48e8-ea82-49c3-bef6-691dd9fd88c5",
   };
 
   // if any parameters are removed, it should be removed from combinedData as well.
@@ -59,7 +56,7 @@ const createPayment = async (req) => {
   // console.log(hashInBase64);
 
   try {
-    const url = `${paymentGatewayDetails.sandboxURL}/api/v1/payments`;
+    const url = `${paymentGatewayDetails.productionURL}/api/v1/payments`;
     console.log(paymentDetails);
     const response = await axios.post(url, paymentDetails, {
       headers: {

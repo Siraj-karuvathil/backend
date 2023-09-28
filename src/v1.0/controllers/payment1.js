@@ -5,9 +5,6 @@ const CryptoJS = require("crypto-js");
 const { default: axios } = require("axios");
 
 const createPayment = async (req) => {
-  // console.log(req?.user);
-  // console.log(req?.body);
-  // console.log(req?.headers);
   const userId = req?.user?._id;
   const cart = await getCartByUserId(userId);
   if (cart === null) {
@@ -24,11 +21,11 @@ const createPayment = async (req) => {
   );
   const paymentGatewayDetails = {
     sandboxURL: "https://skipcashtest.azurewebsites.net",
-    productionURL: "https://api.skipcash.app",
+    productionURL: process.env.SKIPCASH_URL,
     secretKey:
-      "PMyNze/nE9ueQXN1tedX/uck3Pf55uu7F3TJoNQ6tHLGcc216KFuoEpG2/6gzU5NOpM+qWlW4AjsKSndCoJHzUBkE9YMSEnqZbhr3A9wcIvgP4SMTfvTKhB9hHBROuOa5POlwgVMNXr5QbvHFFYt3Gh7sIFs3mcFr0RYh3TurtcdSfSBVpAAydtA7+0Vj36ljf1/DOKnUsKUbxLmkRSVaV4jQe4BpU5RQ2PbqJD4gq/QIUsLu5g9bnHnBoKapo9i9vS9kBKWwaYEultBPTgh8pTjzyAFZsdJaG1LF2p751LxmilpbsHiEDE7G02H3zwg3qorGPGqT0dhWcH96yn3Ch6oOJYcbm4DkRlEbvUB+auV3DPxE6aXSt9xPDcJKhPCePhUkfZS4cfadUKrzW2uAq2Jw/a6mfvchXJOdbAYMc/2r86lhx0wrgqR+9oBqh/Rg/BP+cLM8fRxT9W2DyWAdkchUMimtP1Tm+UvjaTPlEQKq3P88EpwC6rzLhukihkxce9AaQhjVUT56wA78ybPcQ==",
-    keyId: "a7482a05-9475-4f52-a923-e5184db7a250",
-    clientId: "7d574805-bbd1-4f52-8526-0838625708d0",
+      process.env.SKIPCASH_SECRETE,
+    keyId: process.env.SKIPCASH_KEY_ID,
+    clientId: process.env.SKIPCASH_CLIENT_ID,
   };
 
   // if any parameters are removed, it should be removed from combinedData as well.
@@ -59,7 +56,7 @@ const createPayment = async (req) => {
   // console.log(hashInBase64);
 
   try {
-    const url = `${paymentGatewayDetails.sandboxURL}/api/v1/payments`;
+    const url = `${paymentGatewayDetails.productionURL}/api/v1/payments`;
     console.log(paymentDetails);
     const response = await axios.post(url, paymentDetails, {
       headers: {

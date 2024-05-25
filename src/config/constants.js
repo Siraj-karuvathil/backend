@@ -42,4 +42,7 @@ module.exports = {
     NOT_ACCEPTABLE: 406,
     TOO_MANY_REQUESTS: 429,
     UNAUTHORIZED_DEVICE: 401,
+
+     // email template keys
+     EMAIL_SIGNUP_COMPLETED: "signUpCompleted", // signup completed
 };

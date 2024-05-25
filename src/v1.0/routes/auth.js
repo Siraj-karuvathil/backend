@@ -15,6 +15,25 @@ router.post("/login", loginValidator, makeCallback(authController.login));
 // POST : signup
 router.post("/signup", signUpValidator, makeCallback(authController.signUp));
 
+
+// POST : forgot password
+router.post("/forgot-password", forgotPasswordValidator, makeCallback(authController.forgotPassword));
+
+// POST : validate reset password request
+router.post(
+    "/reset-password/validate",
+    isValidResetPasswordToken,
+    makeCallback(async () => ({}))
+);
+
+// POST : reset password
+router.post(
+    "/reset-password",
+    isValidResetPasswordToken,
+    resetPasswordValidator,
+    makeCallback(authController.resetPassword)
+);
+
 // POST : logout
 router.post("/logout", isUserAuthenticated, makeCallback(authController.logout));
 

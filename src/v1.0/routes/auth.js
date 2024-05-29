@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const makeCallback = require("../../utils/callback");
 const authController = require("../controllers/auth");
-const { isUserAuthenticated } = require("../middlewares/authorizer");
+
+const { isUserAuthenticated, isValidResetPasswordToken } = require("../middlewares/authorizer");
 const {
-    auth: { loginValidator },
+    auth: { loginValidator, forgotPasswordValidator, resetPasswordValidator },
 } = require("../validators");
 const {
     user: { signUpValidator },
@@ -19,6 +20,14 @@ router.post("/signup", signUpValidator, makeCallback(authController.signUp));
 // POST : forgot password
 router.post("/forgot-password", forgotPasswordValidator, makeCallback(authController.forgotPassword));
 
+
+// POST : reset password
+router.post(
+    "/reset-password",
+    isValidResetPasswordToken,
+    makeCallback(authController.resetPassword)
+);
+
 // POST : validate reset password request
 router.post(
     "/reset-password/validate",
@@ -26,13 +35,6 @@ router.post(
     makeCallback(async () => ({}))
 );
 
-// POST : reset password
-router.post(
-    "/reset-password",
-    isValidResetPasswordToken,
-    resetPasswordValidator,
-    makeCallback(authController.resetPassword)
-);
 
 // POST : logout
 router.post("/logout", isUserAuthenticated, makeCallback(authController.logout));

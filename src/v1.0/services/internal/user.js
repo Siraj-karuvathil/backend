@@ -1,5 +1,6 @@
 const { generatePasswordHash } = require("../../helpers/string");
 const { User, UserRole, UserDevice } = require("../../models");
+const { sendSignUpCompletedEmail } = require("./email");
 const { getRoleByName } = require("./role");
 
 const createUser = async (data) => {
@@ -7,7 +8,7 @@ const createUser = async (data) => {
     const user = await new User(data).save();
     const role = await getRoleByName(data?.role);
     await createUserRole({ userId: user?.id, roleId: role?.id });
-
+    sendSignUpCompletedEmail(user?.email, { user })
     return user;
 };
 

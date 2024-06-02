@@ -9,7 +9,7 @@ module.exports = {
     STATUS_ACTIVE: "active", // active
     STATUS_INACTIVE: "inactive", // in-active
     STATUS_SUSPENDED: "suspended", // suspended
-    ROUTE_RESET_PASSWORD: "/auth/reset-password?token={token}",
+    ROUTE_RESET_PASSWORD: "/reset-password?token={token}",
     ITEM_TYPE_COURSE: "Course",
     // roles
     ROLE_SUPER_ADMIN: "superAdmin",
@@ -42,4 +42,9 @@ module.exports = {
     NOT_ACCEPTABLE: 406,
     TOO_MANY_REQUESTS: 429,
     UNAUTHORIZED_DEVICE: 401,
-};
+
+     // email template keys
+     EMAIL_SIGNUP_COMPLETED: "signUpCompleted", // signup completed
+     EMAIL_RESET_PASSWORD: "resetPassword", // reset password
+     EMAIL_PASSWORD_CHANGED: "passwordChanged", // password changed
+    };

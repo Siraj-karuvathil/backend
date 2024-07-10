@@ -15,6 +15,7 @@ const exceptionConverter = (error, _, res, next) => {
 };
 
 const exceptionHandler = (error, _, res, next) => {
+    console.log(error);
     let { statusCode = 500, message, errors = null, isOperational = false } = error;
     if (!isOperational) {
         statusCode = INTERNAL_SERVER_ERROR;

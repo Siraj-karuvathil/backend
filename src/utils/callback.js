@@ -24,11 +24,15 @@ module.exports = (callback) => (req, res, next) => {
 
     // success function
     const success = (response) => {
-        const { statusCode = OK, message = messages.success, headers = null, data } = response ?? {};
+        const { statusCode = OK, message = messages.success, headers = null, data, redirect = null } = response ?? {};
         for (const headerKey in headers) {
             if (Object.hasOwnProperty.call(headers, headerKey)) {
                 res.header(headerKey, headers[headerKey]);
             }
+        }
+        if(redirect && typeof redirect === "string") {
+            res.redirect(redirect);
+            return;
         }
         res.status(statusCode).send({ statusCode, message, data });
     };

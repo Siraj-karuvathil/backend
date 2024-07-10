@@ -1,6 +1,7 @@
 <h3>Welcome</h3>
 <p>Hello <%= name %>,</p>
 <p>Congratulations on your successful registration.</p>
+<p>Please verify your email by <a href="<%= backendUrl %>/api/1.0/auth/verify-email?token=<%= verificationToken %>">click here</a></p>
 <p>If you need additional assistance, please contact <%= config?.app?.helpEmail %>.</p>
 <p>Cheers,</p>
-<p>The <%= config?.app?.name %> Team</p>
+<p>The <%= appName %> Team</p>

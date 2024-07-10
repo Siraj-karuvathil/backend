@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const { STATUS_ACTIVE, YES, ROLE_SUPER_ADMIN, ROLE_STUDENT } = require("../../config/constants");
 const { UnauthorizedException, ForbiddenException } = require("../../utils/customExceptions");
-const { getUserByMatch, getUserDeviceByMatch, getUserRoleByMatch, getUserById } = require("../services/internal/user");
 const { getRoleByName } = require("../services/internal/role");
+
 
 // get token from authorization header
 const getBearerToken = async (headers) => {
@@ -37,6 +37,18 @@ const verifyAccessToken = async (token) => {
     return payload;
 };
 
+const verifyEmailVerificationToken = async (token) => {
+    if (!token) throw new ForbiddenException("Token is required");
+    let payload;
+    try {
+        payload = jwt.verify(token, config?.verificationTokenSecret);
+    } catch (error) {
+        payload = null;
+    }
+    if (!payload) throw new ForbiddenException("Invalid Token");
+    return payload;
+};
+
 const verifyRefreshToken = async (token) => {
     let payload;
     try {
@@ -49,6 +61,7 @@ const verifyRefreshToken = async (token) => {
 };
 
 const verifyUserAccount = async (payload) => {
+    const {getUserByMatch} = require("../services/internal/user")
     const user = await getUserByMatch({ _id: payload?.userId, email: payload?.email });
     if (!user) throw new UnauthorizedException();
     await verifyUserStatus(user);
@@ -64,6 +77,7 @@ const verifyUserStatus = async (user) => {
 const verifyUserRole = async (payload) => {
     const role = await getRoleByName(payload?.role);
     if (!role) throw new UnauthorizedException();
+    const {getUserRoleByMatch} = require("../services/internal/user")
     const userRole = await getUserRoleByMatch({ userId: payload?.userId, roleId: role?._id, isActive: YES });
     if (!userRole) throw new UnauthorizedException();
     return payload;
@@ -72,6 +86,7 @@ const verifyUserRole = async (payload) => {
 const verifyUserDevice = async (headers, data) => {
     const { "device-id": deviceId, "app-type": appType } = headers;
     const { userId, sessionId } = data;
+    const {getUserDeviceByMatch} = require("../services/internal/user")
     const device = await getUserDeviceByMatch({
         userId,
         deviceId,
@@ -88,6 +103,8 @@ const setVerifiedUser = async (req, payload) => {
 };
 
 const setLoggedInUser = async (req, payload) => {
+    const {getUserById} = require("../services/internal/user")
+    
     req.user = await getUserById(payload?.userId, "-password -resetPasswordToken ");
 };
 
@@ -140,10 +157,19 @@ const isStudent = async (req, res, next) => {
         })
         .catch(next);
 };
+
+const isValidEmailValidator = async (req, res, next) => {
+    const { token } = req?.query;
+    if (!token) throw new UnauthorizedException();
+    next();
+}
+
 module.exports = {
+    isValidEmailValidator,
     isValidResetPasswordToken,
     isValidRefreshToken,
     isUserAuthenticated,
     isSuperAdmin,
     isStudent,
+    verifyEmailVerificationToken,
 };

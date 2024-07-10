@@ -2,7 +2,7 @@ const router = require("express").Router();
 const makeCallback = require("../../utils/callback");
 const authController = require("../controllers/auth");
 
-const { isUserAuthenticated, isValidResetPasswordToken } = require("../middlewares/authorizer");
+const { isUserAuthenticated, isValidResetPasswordToken, isValidEmailValidator } = require("../middlewares/authorizer");
 const {
     auth: { loginValidator, forgotPasswordValidator, resetPasswordValidator },
 } = require("../validators");
@@ -34,7 +34,6 @@ router.post(
     isValidResetPasswordToken,
     makeCallback(async () => ({}))
 );
-
 
 // POST : logout
 router.post("/logout", isUserAuthenticated, makeCallback(authController.logout));

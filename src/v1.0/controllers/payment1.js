@@ -28,6 +28,8 @@ const createPayment = async (req) => {
     clientId: process.env.SKIPCASH_CLIENT_ID,
   };
 
+  const orderId = `COOKINGACADEMY_ORDER_${v4()}`
+
   // if any parameters are removed, it should be removed from combinedData as well.
   const paymentDetails = {
     Uid: v4(),
@@ -39,13 +41,13 @@ const createPayment = async (req) => {
     Email: req?.body?.email,
     Street: req?.body?.street, // required for US, UK, and Canada cards only
     City: req?.body?.city, // required for US, UK, and Canada cards only
-    State: "KL", // required for US, UK, and Canada cards only
-    Country: "IN", // required for US, UK, and Canada cards only
-    PostalCode: req?.body?.postalCode, // required for US, UK, and Canada cards only
-    TransactionId: "COOKINGACADEMY2303040001", // your internal order id
-    Custom1: req?.user?._id, // optional
+    // State: "KL", // required for US, UK, and Canada cards only
+    // Country: "IN", // required for US, UK, and Canada cards only
+    // PostalCode: req?.body?.postalCode, // required for US, UK, and Canada cards only
+    TransactionId: orderId, // your internal order id
+    Custom1: String(req?.user?._id), // optional
   };
-  const combinedData = `Uid=${paymentDetails.Uid},KeyId=${paymentDetails.KeyId},Amount=${paymentDetails.Amount},FirstName=${paymentDetails.FirstName},LastName=${paymentDetails.LastName},Phone=${paymentDetails.Phone},Email=${paymentDetails.Email},Street=${paymentDetails.Street},City=${paymentDetails.City},State=${paymentDetails.State},Country=${paymentDetails.Country},PostalCode=${paymentDetails.PostalCode},TransactionId=${paymentDetails.TransactionId},Custom1=${paymentDetails.Custom1}`;
+  const combinedData = `Uid=${paymentDetails.Uid},KeyId=${paymentDetails.KeyId},Amount=${paymentDetails.Amount},FirstName=${paymentDetails.FirstName},LastName=${paymentDetails.LastName},Phone=${paymentDetails.Phone},Email=${paymentDetails.Email},Street=${paymentDetails.Street},City=${paymentDetails.City},TransactionId=${paymentDetails.TransactionId},Custom1=${paymentDetails.Custom1}`;
 
   const combinedDataHash = CryptoJS.HmacSHA256(
     combinedData,

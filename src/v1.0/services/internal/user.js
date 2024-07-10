@@ -1,14 +1,19 @@
 const { generatePasswordHash } = require("../../helpers/string");
 const { User, UserRole, UserDevice } = require("../../models");
+const { getUserVerificationToken } = require("./auth");
 const { sendSignUpCompletedEmail } = require("./email");
 const { getRoleByName } = require("./role");
 
 const createUser = async (data) => {
     data.password = await generatePasswordHash(data?.password);
-    const user = await new User(data).save();
+    const user = await new User({
+        ...data,
+        isVerified: false,
+    }).save();
     const role = await getRoleByName(data?.role);
     await createUserRole({ userId: user?.id, roleId: role?.id });
-    sendSignUpCompletedEmail(user?.email, { user })
+    const verificationToken = await getUserVerificationToken(user?.id);
+    sendSignUpCompletedEmail(user?.email, { user, verificationToken });
     return user;
 };
 

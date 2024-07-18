@@ -29,8 +29,13 @@ const {
 
 // compare the input username with email/phoneNumber/username & isArchived should be false
 const authenticateUser = async (username) => {
-    const {getUserByMatch} = require("./user");
-	const user = await getUserByMatch({ username: username });
+	const { getUserByMatch } = require("./user");
+	const user = await getUserByMatch({
+		$or: [
+			{ username: username },
+			{ email: username },
+		],
+	});
 	if (!user) throw new NotFoundException(messages?.invalidEmailPass);
 	return user;
 };
@@ -63,7 +68,7 @@ const checkUserStatus = async (user) => {
 };
 
 const getActiveRole = async (user) => {
-	const {getUserRoleByMatch} = require("./user");
+	const { getUserRoleByMatch } = require("./user");
 	const userRole = await getUserRoleByMatch({
 		userId: user._id,
 		isActive: YES,
@@ -113,7 +118,7 @@ const generateRefreshToken = async (payload, headers) => {
 		refreshToken,
 		isActive: YES,
 	};
-	const {createOrUpdateUserDevice} = require("./user");
+	const { createOrUpdateUserDevice } = require("./user");
 
 	await createOrUpdateUserDevice(deviceData);
 	return refreshToken;
@@ -129,7 +134,7 @@ const generateTokens = async (payload, headers) => {
 };
 
 const getProfile = async (userId) => {
-	const {getUserById} = require("./user");
+	const { getUserById } = require("./user");
 	return await getUserById(userId, "name username email phoneNumber");
 };
 
@@ -165,8 +170,8 @@ const validateResetPassword = (data) => {
 
 const logoutFromUserDevice = async (user, headers) => {
 	const { "device-id": deviceId = "", "app-type": appType = "" } = headers;
-	const {updateUserDeviceByMatch} = require("./user");
-	
+	const { updateUserDeviceByMatch } = require("./user");
+
 	await updateUserDeviceByMatch(
 		{
 			userId: user?._id,
@@ -193,7 +198,7 @@ const handleAuthenticate = async (data, headers) => {
 	const payload = await generatePayload(user, role);
 	const tokens = await generateTokens(payload, headers);
 	const profile = await getProfile(payload?.userId);
-	if(!user.isVerified) {
+	if (!user.isVerified) {
 		throw new BadRequestException(messages.notVerified);
 	}
 	return {
@@ -211,7 +216,7 @@ const handleForgotPassword = async (data) => {
 const handleResetPassword = async (data) => {
 	const validated = validateResetPassword(data);
 	if (!validated) throw new BadRequestException();
-	const {getUserByEmail} = require("./user");
+	const { getUserByEmail } = require("./user");
 
 	const user = await getUserByEmail(data?.email);
 	user.password = await generatePasswordHash(data?.newPassword);
@@ -223,7 +228,7 @@ const handleResetPassword = async (data) => {
 };
 
 const handleRefreshToken = async (data, headers) => {
-	const {getUserByEmail} = require("./user");
+	const { getUserByEmail } = require("./user");
 
 	const user = await getUserByEmail(data?.email);
 	await checkUserStatus(user);
@@ -239,7 +244,7 @@ const handleLogout = async (user, headers) => {
 };
 
 const handleChangePassword = async (id, data) => {
-	const {getUserById} = require("./user");
+	const { getUserById } = require("./user");
 
 	const user = await getUserById(id);
 	await validateChangePassword(data?.oldPassword, user.password);
@@ -248,7 +253,7 @@ const handleChangePassword = async (id, data) => {
 };
 
 const authenticateByEmail = async (email) => {
-	const {getUserByEmail} = require("./user");
+	const { getUserByEmail } = require("./user");
 
 	const user = await getUserByEmail(email);
 	if (!user) throw new NotFoundException(messages?.userNotFound);
@@ -262,10 +267,10 @@ const handleVerifyEmail = async (token) => {
 	);
 	const _userService = require("./user");
 	const user = await _userService.getUserById(payload?.userId);
-	if(user.isVerified) {
-        throw new BadRequestException(messages?.emailAlreadyVerified);
-    }
-    user.isVerified = true;
+	if (user.isVerified) {
+		throw new BadRequestException(messages?.emailAlreadyVerified);
+	}
+	user.isVerified = true;
 	await user.save();
 };
 

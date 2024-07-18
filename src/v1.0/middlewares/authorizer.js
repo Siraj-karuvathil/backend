@@ -13,6 +13,7 @@ const getBearerToken = async (headers) => {
 };
 
 const verifyResetPasswordToken = async (token) => {
+    const {getUserByMatch} = require("../services/internal/user")
     let payload;
     try {
         payload = jwt.verify(token, config?.resetPasswordTokenSecret);

@@ -25,7 +25,7 @@ const resetPasswordValidator = () => {
 };
 
 module.exports = (errorFormatter) => ({
-    loginValidator: [loginValidator(), errorFormatter],
     forgotPasswordValidator: [forgotPasswordValidator(), errorFormatter],
     resetPasswordValidator: [resetPasswordValidator(), errorFormatter],
+    loginValidator: [loginValidator(), errorFormatter],
 });

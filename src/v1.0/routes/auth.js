@@ -3,7 +3,7 @@ const makeCallback = require("../../utils/callback");
 const authController = require("../controllers/auth");
 const { isUserAuthenticated } = require("../middlewares/authorizer");
 const {
-    auth: { loginValidator },
+    auth: { loginValidator, resetPasswordValidator, forgotPasswordValidator },
 } = require("../validators");
 const {
     user: { signUpValidator },
@@ -22,14 +22,14 @@ router.post("/forgot-password", forgotPasswordValidator, makeCallback(authContro
 // POST : validate reset password request
 router.post(
     "/reset-password/validate",
-    isValidResetPasswordToken,
+    // isValidResetPasswordToken,
     makeCallback(async () => ({}))
 );
 
 // POST : reset password
 router.post(
     "/reset-password",
-    isValidResetPasswordToken,
+    // isValidResetPasswordToken,
     resetPasswordValidator,
     makeCallback(authController.resetPassword)
 );
